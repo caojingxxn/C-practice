@@ -10,276 +10,640 @@
 #include <assert.h>
 #include "SeqList.h"
 
-void SeqList_Init(SeqList *L)//初始化
+void SeqListInit(SeqList* seq)//初始化
 {
-    assert(L);
-    L->length = 0;
+    assert(seq);
+    seq->length = 0;
     
 }
 
 
-void SeqList_Push_Back(SeqList *L, ElemType c)//尾插
+void SeqListPushBack(SeqList* seq, SeqType value)//尾插
 {
-    assert(L);
-    if (L->length >= MaxSizeSeqList) {
-        printf("插入失败！\n");
+    assert(seq);
+    if (seq->length >= SeqListMaxSize) {
         return;
     }
-    L->data[L->length] = c;
-    L->length++;
+    seq->data[seq->length] = value;
+    seq->length++;
     
 }
 
-void SeqList_Pop_Back(SeqList *L)//尾删
-{
-    assert(L);
-    
-    if (L->length == 0) {
-        printf("删除失败！\n");
-        return;
-    }
-    
-    L->length--;
-    
-}
 
-void SeqList_Push_Front(SeqList *L,ElemType c)//头插
-{
-    assert(L);
-    int i;
-    if (L->length >= MaxSizeSeqList) {
-        printf("插入失败！\n");
-        return;
-    }
-    for (i = L->length; i > 0; i--) {
-        L->data[i] = L->data[i-1];
-    }
-    L->data[0] = c;
-    L->length++;
-    
-}
 
-void SeqList_Pop_Front(SeqList *L)//头删
+void SeqListPopBack(SeqList* seq)//尾删
 {
-    assert(L);
-    int i = 0;
+    assert(seq);
     
-    if (L->length == 0) {
-        printf("删除失败！\n");
+    if (seq->length == 0) {
         return;
     }
     
-    for ( ; i < L->length-1; i++) {
-        
-        L->data[i] = L->data[i+1];
-        
-    }
-    
-    L->length--;
-    
-}
-
-ElemType SeqList_Getchar(SeqList *L,int Position)//读任意位置元素
-{
-    assert(L);
-    if (Position >= L->length) {
-        printf("读取失败！\n");
-        return -1;
-    }
-    
-    return L->data[Position];
-
+    seq->length--;
     
 }
 
 
-void SeqList_Revise(SeqList *L,int Position,ElemType c)//修改任意位置元素
+
+void SeqListPushFront(SeqList* seq, SeqType value)//头插
 {
-    assert(L);
+    assert(seq);
+    size_t i;
+    if (seq->length >= SeqListMaxSize) {
+        return;
+    }
     
-    if (Position >= L->length) {
-        printf("修改失败！\n");
+    for (i = seq->length; i > 0; i--) {
+        seq->data[i] = seq->data[i-1];
+    }
+    seq->data[0] = value;
+    seq->length++;
+    
+}
+
+
+
+void SeqListPopFront(SeqList* seq)//头删
+{
+    assert(seq);
+    if (seq->length == 0) {
+        return;
+    }
+    
+    size_t i = 0;
+    for ( ; i < seq->length-1; i++) {
+        seq->data[i] = seq->data[i+1];
+    }
+    
+    seq->length--;
+    
+}
+
+
+
+SeqType SeqListGet(SeqList* seq, size_t pos, SeqType default_value)//取顺序表中任意位置的一个元素
+{
+    assert(seq);
+    if (pos >= seq->length) {
+        return default_value;
+    }
+    
+    return seq->data[pos];
+
+    
+}
+
+
+void SeqListSet(SeqList* seq, size_t pos,SeqType value)//修改任意位置元素
+
+{
+    assert(seq);
+    
+    if (pos >= seq->length) {
+        return;
     }
     else
-        L->data[Position] = c;
+        seq->data[pos] = value;
     
     
 }
 
-void SeqList_Search(SeqList *L,ElemType a)//查找指定元素值的下标
+
+
+size_t SeqListFind(SeqList* seq, SeqType value)//查找指定元素值的下标
 {
-    assert(L);
-    int i = 0;
-    int flag = 0;
-    for (; i < L->length; i++) {
-        if (L->data[i] == a) {
-            printf("%c的下标为：%-3d",a,i);
-            flag = 1;
+    assert(seq);
+    size_t i = 0;
+    
+    for (; i < seq->length; i++) {
+        if (seq->data[i] == value) {
+            return i;
         }
     }
     
-    if (flag == 0) {
-        printf("%c:没有此元素！\n",a);
-    }
-    else
-        printf("\n");
-    
+    return (size_t)-1;
+        
+        
 }
 
 
-void SeqListInsert(SeqList *L,int Position,ElemType c)//在任意位置插入元素
+void SeqListInsert(SeqList* seq, size_t pos,SeqType value)//在任意位置插入元素
 {
-    assert(L);
-    if (Position > L->length) {
-        printf("插入失败！\n");
+    assert(seq);
+    if (pos > seq->length) {
+        ;
     }
     
     else{
-        int i = L->length;
-        for (; i > Position; i--) {
-            L->data[i] = L->data[i-1];
+        size_t i = seq->length;
+        for (; i > pos; i--) {
+            seq->data[i] = seq->data[i-1];
         }
-        L->data[Position] = c;
+        seq->data[pos] = value;
         
-        L->length++;
+        seq->length++;
     }
     
     
 }
 
+
+void SeqListErase(SeqList* seq, size_t pos)//删除指定位置的值
+{
+    assert(seq);
+    if (pos >= seq->length) {
+        return;
+    }
+    
+    size_t i;
+    for ( i = pos; i < seq->length-1; i++) {
+        
+        seq->data[i] = seq->data[i+1];
+        
+    }
+    
+    seq->length--;
+    
+  
+}
+
+
+void SeqListRemove(SeqList* seq, SeqType to_delete)//删除第一个指定元素的值
+{
+    
+    assert(seq);
+    size_t i = SeqListFind(seq, to_delete);
+    
+    if (seq->data[i] == to_delete) {
+        SeqListErase(seq, i);
+    }
+    
+}
+
+
+
+void SeqListRemoveAll(SeqList* seq, SeqType to_delete)//删除顺序表中所有的指定的值
+{
+    assert(seq);
+    size_t count = 0;
+    size_t i = 0;
+    
+    for ( ; i < seq->length; i++) {
+        if (seq->data[i] == to_delete) {
+            count++;
+        }
+    }
+    
+    while (count--) {
+        SeqListRemove(seq, to_delete);
+    }
+    
+}
+
+void SeqListRemoveAllEx(SeqList* seq, SeqType to_delete)//删除顺序表中所有的指定的值,时间复杂度O(n)
+{
+    
+    size_t cur = 0;
+    size_t count = 0;
+    
+    for ( ; count < seq->length; count++) {
+        
+        if (seq->data[count] != to_delete) {
+            seq->data[cur] = seq->data[count];
+            cur++;
+        }
+
+    }
+    
+    seq->length = cur;
+    
+}
+
+
+size_t SeqListSize(SeqList* seq)//获取顺序表元素个数
+{
+    return seq->length;
+    
+}
+
+
+int SeqListEmpty(SeqList* seq)//判定顺序表是否为空
+{
+    if (seq->length == 0) {
+        return 1;
+    }
+    else
+        return 0;
+}
+
+void SeqListBubbleSort(SeqList* seq)//冒泡排序
+{
+    size_t count,cur;
+    for (count = 0; count < seq->length-1; count++) {
+        for (cur = 0; cur < seq->length-count-1; cur++) {
+            if (seq->data[cur] > seq->data[cur+1]) {
+                
+                seq->data[cur] ^= seq->data[cur+1];
+                seq->data[cur+1] ^= seq->data[cur];
+                seq->data[cur] ^= seq->data[cur+1];
+
+            }
+        }
+    }
+ 
+    
+}
+
+
+int cmp(SType a, SType b)
+{
+    if (a < b) {
+        return 1;
+    }
+    else
+        return 0;
+    
+}
+
+
+void SeqListBubbleSortEx(SeqList* seq, int (*cmp)(SType , SType))
+{
+    
+    size_t count,cur;
+    
+    for (count = 0; count < seq->length-1; count++) {
+        for (cur = 0; cur < seq->length-count-1; cur++) {
+            if (cmp(seq->data[cur],seq->data[cur+1])) {
+                
+                seq->data[cur] ^= seq->data[cur+1];
+                seq->data[cur+1] ^= seq->data[cur];
+                seq->data[cur] ^= seq->data[cur+1];
+                
+            }
+        }
+    }
+    
+    
+    
+    
+    
+    
+}
 
 //////////////////////////////////////////////////
 //                以下为测试代码                   //
 //////////////////////////////////////////////////
 
-void DispListSeqList(SeqList *L)//输出
+
+
+
+void DispListSeqList(SeqList *L, char *str)//输出
 {
-    int i;
+    size_t i;
+    printf("[%s]  ",str);
+    printf("length:%zu\n",L->length);
+    
     for (i=0; i<L->length; i++) {
-        printf("data[%d]:%-3c [地址:]%p\n",i,L->data[i],&L->data[i]);
+        printf("data[%zu]:%-3c [地址:]%p\n",i,L->data[i],&L->data[i]);
     }
-    printf("length:%d\n\n",L->length);
+    printf("\n");
+
 }
 
-void Test_Init(SeqList *L)//初始化测试
+void Test_Init()//初始化测试
 {
     TEST_HEADER;
-    SeqList_Init(L);
-    printf("length:%d\n",L->length);
+    SeqList L;
+    SeqListInit(&L);
+    DispListSeqList(&L,"初始化为空表:");
     
 }
 
 
-void Test_Push_Back(SeqList *L)//尾插法测试
+void Test_Push_Back()//尾插法测试
 {
     TEST_HEADER;
-    SeqList_Push_Back(L, 'a');
-    SeqList_Push_Back(L, 'b');
-    SeqList_Push_Back(L, 'c');
-    SeqList_Push_Back(L, 'd');
+    SeqList L;
+    SeqListInit(&L);
+
+    SeqListPushBack(&L, 'a');
+    SeqListPushBack(&L, 'b');
+    SeqListPushBack(&L, 'c');
+    SeqListPushBack(&L, 'd');
     
-    DispListSeqList(L);
+    DispListSeqList(&L,"尾插 a,b,c,d:");
 }
 
 
-void Test_Pop_Back(SeqList *L)//尾删法测试
+void Test_Pop_Back()//尾删法测试
 {
     TEST_HEADER;
-    SeqList_Pop_Back(L);
-    SeqList_Pop_Back(L);
+    SeqList L;
+    SeqListInit(&L);
+    SeqListPopBack(&L);
+    DispListSeqList(&L,"尾删空表:");
     
-    DispListSeqList(L);
+    SeqListPushBack(&L, 'a');
+    SeqListPushBack(&L, 'b');
+    SeqListPushBack(&L, 'c');
+    SeqListPushBack(&L, 'd');
     
-    SeqList_Pop_Back(L);
-    SeqList_Pop_Back(L);
-    SeqList_Pop_Back(L);
+    DispListSeqList(&L,"尾插 a,b,c,d:");
+    
+    SeqListPopBack(&L);
+    SeqListPopBack(&L);
+    DispListSeqList(&L,"尾删两个元素:");
 
 }
 
-void Test_Push_Front(SeqList *L)//头插法测试
+void Test_Push_Front()//头插法测试
 {
     TEST_HEADER;
-    SeqList_Push_Front(L,'m');
-    SeqList_Push_Front(L,'n');
-    DispListSeqList(L);
+    SeqList L;
+    SeqListInit(&L);
     
-}
-
-
-void Test_Pop_Front(SeqList *L)//头删法测试
-{
-    TEST_HEADER;
-    SeqList_Pop_Front(L);
-    DispListSeqList(L);
-    SeqList_Pop_Front(L);
-    SeqList_Pop_Front(L);
-    DispListSeqList(L);
+    SeqListPushFront(&L,'m');
+    SeqListPushFront(&L,'n');
+    DispListSeqList(&L,"头插 m,n:");
     
-}
-
-void Test_Get_char(SeqList *L)
-{
-    TEST_HEADER;
-    int a;
-    SeqList_Push_Back(L, 'k');
-    a = SeqList_Getchar(L, 0);
-    if (a != -1) {
-        printf("%c\n",a);
-    }
-    a = SeqList_Getchar(L, 1);
-    if (a != -1) {
-        printf("%c\n",a);
-    }
-    
-}
-
-void Test_Revise(SeqList *L)
-{
-    TEST_HEADER;
-    SeqList_Push_Front(L,'a');
-    SeqList_Push_Front(L,'b');
-    SeqList_Push_Front(L,'c');
-    DispListSeqList(L);
-    SeqList_Revise(L, 1, 'v');
-    
-    DispListSeqList(L);
-    SeqList_Revise(L, 4, 'm');
-}
-
-void Test_Search(SeqList *L)//查找下标测试
-{
-    TEST_HEADER;
-    SeqList_Search(L, 'k');
-    SeqList_Search(L, 'a');
-    SeqList_Search(L, 'm');
+    SeqListPushFront(&L,'a');
+    SeqListPushFront(&L,'b');
+    DispListSeqList(&L,"头插 a,b:");
     
 }
 
 
-
-void TestInsert(SeqList *L)
+void Test_Pop_Front()//头删法测试
 {
     TEST_HEADER;
-    SeqListInsert(L, 3, 'w');
-    DispListSeqList(L);
-    SeqListInsert(L, 5, 'p');
-    DispListSeqList(L);
-    SeqListInsert(L, 7, 'o');
+    SeqList L;
+    SeqListInit(&L);
+    SeqListPopFront(&L);
+    DispListSeqList(&L,"头删空表:");
+    
+    SeqListPushBack(&L, 'a');
+    SeqListPushBack(&L, 'b');
+    SeqListPushBack(&L, 'c');
+    SeqListPushBack(&L, 'd');
+    DispListSeqList(&L,"尾插 a,b,c,d:");
+    
+    
+    SeqListPopFront(&L);
+    SeqListPopFront(&L);
+    DispListSeqList(&L,"头删两个元素:");
+    
+    
+}
+
+
+void Test_Get()
+{
+    TEST_HEADER;
+    SeqList L;
+    SeqListInit(&L);
+    
+    SeqListPushBack(&L, 'a');
+    SeqListPushBack(&L, 'b');
+    SeqListPushBack(&L, 'c');
+    SeqListPushBack(&L, 'd');
+    
+    SeqType a = SeqListGet(&L, 10, -1);
+    DispListSeqList(&L,"尾插 a,b,c,d:");
+    printf("取下标为10元素的值[actual:]%c\n",a);
+    
+    SeqType b = SeqListGet(&L, 2, -1);
+    printf("取下标为2元素的值[expect:]c [actual:]%c\n",b);
+
+}
+
+
+void Test_Set()
+{
+    TEST_HEADER;
+    SeqList L;
+    SeqListInit(&L);
+    SeqListSet(&L, 2, 'm');
+    DispListSeqList(&L, "对空表下标为2的元素修改为'm':");
+    SeqListPushBack(&L, 'a');
+    SeqListPushBack(&L, 'b');
+    SeqListPushBack(&L, 'c');
+    SeqListPushBack(&L, 'd');
+    SeqListSet(&L, 2, 'm');
+    DispListSeqList(&L, "尾插a,b,c,f,对下标为2的元素修改为'm':");
+
+}
+
+
+
+void Test_Find()//查找下标测试
+{
+    TEST_HEADER;
+    SeqList L;
+    SeqListInit(&L);
+    
+    SeqListPushBack(&L, 'a');
+    SeqListPushBack(&L, 'b');
+    SeqListPushBack(&L, 'c');
+    SeqListPushBack(&L, 'd');
+    DispListSeqList(&L,"尾插 a,b,c,d:");
+    
+    size_t k = SeqListFind(&L, 'm');
+    printf("查找'm' [actual:]%zu\n",k);
+    
+    size_t t = SeqListFind(&L, 'b');
+    printf("查找'b' [expect:]1  [actual:]%zu\n",t);
+    
+    
+}
+
+
+
+void Test_Insert()
+{
+    TEST_HEADER;
+    SeqList L;
+    SeqListInit(&L);
+    
+    SeqListPushBack(&L, 'a');
+    SeqListPushBack(&L, 'b');
+    SeqListPushBack(&L, 'c');
+    SeqListPushBack(&L, 'd');
+    DispListSeqList(&L,"尾插 a,b,c,d:");
+    
+    SeqListInsert(&L, 4, 'l');
+    DispListSeqList(&L,"在末尾插入'l':");
+    
+    SeqListInsert(&L, 0, 'i');
+    DispListSeqList(&L,"在开头插入'i':");
+    
+    SeqListInsert(&L, 2, 'n');
+    DispListSeqList(&L,"在下标为2插入'n':");
+}
+
+
+
+void Tset_Erase()
+{
+    TEST_HEADER;
+    SeqList L;
+    SeqListInit(&L);
+    SeqListErase(&L, 1);
+    DispListSeqList(&L, "在空表删除下标为1的元素:");
+    
+    SeqListPushBack(&L, 'a');
+    SeqListPushBack(&L, 'b');
+    SeqListPushBack(&L, 'c');
+    SeqListPushBack(&L, 'a');
+    SeqListPushBack(&L, 'd');
+    SeqListPushBack(&L, 'a');
+    DispListSeqList(&L,"尾插 a,b,c,a,d,a:");
+    
+    SeqListErase(&L, 6);
+    DispListSeqList(&L,"删除下标为6的元素(无此元素):");
+    
+    SeqListErase(&L, 3);
+    DispListSeqList(&L,"删除下标为3的元素:");
+    
+    SeqListErase(&L, 0);
+    DispListSeqList(&L,"删除下标为0的元素:");
+    
+
+}
+
+
+void Test_Remove()
+{
+    
+    TEST_HEADER;
+    SeqList L;
+    SeqListInit(&L);
+    SeqListRemove(&L, 'a');
+    DispListSeqList(&L, "在空表删除'a':");
+    
+    SeqListPushBack(&L, 'a');
+    SeqListPushBack(&L, 'b');
+    SeqListPushBack(&L, 'c');
+    SeqListPushBack(&L, 'a');
+    SeqListPushBack(&L, 'd');
+    SeqListPushBack(&L, 'a');
+    DispListSeqList(&L,"尾插 a,b,c,a,d,a:");
+    
+    SeqListRemove(&L, 'a');
+    DispListSeqList(&L,"删除第一个'a':");
+    
+}
+
+
+void Test_RemoveAll()
+{
+    TEST_HEADER;
+    SeqList L;
+    SeqListInit(&L);
+    
+    SeqListPushBack(&L, 'a');
+    SeqListPushBack(&L, 'b');
+    SeqListPushBack(&L, 'c');
+    SeqListPushBack(&L, 'a');
+    SeqListPushBack(&L, 'd');
+    SeqListPushBack(&L, 'a');
+    DispListSeqList(&L,"尾插 a,b,c,a,d,a:");
+    
+    SeqListRemoveAll(&L, 'a');
+    DispListSeqList(&L,"删除所有'a':");
+
+}
+
+void Test_RemoveAllEx()
+{
+    TEST_HEADER;
+    SeqList L;
+    SeqListInit(&L);
+    
+    SeqListPushBack(&L, 'a');
+    SeqListPushBack(&L, 'b');
+    SeqListPushBack(&L, 'c');
+    SeqListPushBack(&L, 'a');
+    SeqListPushBack(&L, 'd');
+    SeqListPushBack(&L, 'a');
+    DispListSeqList(&L,"尾插 a,b,c,a,d,a:");
+    
+    SeqListRemoveAllEx(&L, 'a');
+    DispListSeqList(&L,"删除所有'a':");
+    
+}
+
+
+void Test_Empty()
+{
+    TEST_HEADER;
+    SeqList L;
+    SeqListInit(&L);
+    int a = SeqListEmpty(&L);
+    printf("[判定空表是否为空:][expect:]1 [actual:]%d\n",a);
+    
+    SeqListPushBack(&L, 'm');
+    SeqListPushBack(&L, 'n');
+    DispListSeqList(&L, "尾插m,n:");
+    int b = SeqListEmpty(&L);
+    printf("[判定是否为空:][expect:]0 [actual:]%d\n",b);
+}
+
+void Test_Bubble()
+{
+    TEST_HEADER;
+    SeqList L;
+    SeqListInit(&L);
+    SeqListPushBack(&L, 'c');
+    SeqListPushBack(&L, 'a');
+    SeqListPushBack(&L, 'm');
+    SeqListPushBack(&L, 'd');
+    SeqListPushBack(&L, 'i');
+    DispListSeqList(&L,"尾插 c,a,m,d,i:");
+    
+    SeqListBubbleSort(&L);
+    DispListSeqList(&L,"进行冒泡排序:");
+    
+    
+}
+
+
+void Test_BubbleEx()
+{
+    TEST_HEADER;
+    SeqList L;
+    SeqListInit(&L);
+    SeqListPushBack(&L, 'c');
+    SeqListPushBack(&L, 'a');
+    SeqListPushBack(&L, 'm');
+    SeqListPushBack(&L, 'd');
+    SeqListPushBack(&L, 'i');
+    DispListSeqList(&L,"尾插 c,a,m,d,i:");
+    
+    SeqListBubbleSortEx(&L,&cmp);
+    DispListSeqList(&L,"进行优化的冒泡排序:");
+    
+
 }
 
 #include <stdio.h>
 
 int main(int argc, const char * argv[]) {
     
-    SeqList L;
-    Test_Init(&L);
-    Test_Push_Back(&L);
-    Test_Pop_Back(&L);
-    Test_Push_Front(&L);
-    Test_Pop_Front(&L);
-    Test_Get_char(&L);
-    Test_Revise(&L);
-    Test_Search(&L);
-    TestInsert(&L);
+    Test_Init();
+    Test_Push_Back();
+    Test_Pop_Back();
+    Test_Push_Front();
+    Test_Pop_Front();
+    Test_Get();
+    Test_Set();
+    Test_Find();
+    Test_Insert();
+    Tset_Erase();
+    Test_Remove();
+    Test_RemoveAll();//删除所有
+    Test_RemoveAllEx();//优化时间复杂度
+    Test_Empty();
+    Test_Bubble();
+    Test_BubbleEx();
     return 0;
 }
