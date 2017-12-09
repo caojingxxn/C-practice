@@ -1,125 +1,54 @@
 //
-//  main.c
-//  扫雷
+//  main.cpp
+//  二维数组中的查找
 //
-//  Created by admin on 17/12/5.
-//  Copyright © 2017年 Amon. All rights reserved.
+//  Created by admin on 17/10/29.
+//  Copyright © 2017年 admin. All rights reserved.
 //
+//在一个二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个函数，输入这样一个二维数组和一个整数，判断数组中是否含有该整数。
 
 #include <stdio.h>
-#include <time.h>
-#include <stdlib.h>
 
-#include "project.h"
-
-void menu()
+int main(int argc, const char * argv[])
 {
-    printf("/////////////////////////////////\n");
-    printf("//      1.play     0.exit      //\n");
-    printf("/////////////////////////////////\n");
+    int a,b=0,i,j;
     
-}
-
-
-void game()
-{
-    srand((unsigned int)time(NULL));
+    scanf("%d,%d",&i,&j);
+    int k[i][j];
     
-    char MINE[ROWS][COLS];
-    char SHOW[ROWS][COLS];
+    for (a=0; a<i; a++)
+        for (b=0; b<j; b++)
+            scanf("%d",&k[a][b]);
     
-    InitMine(MINE);
-    InitSHOW(SHOW);
-    
-    //DisPlay(MINE);
-    DisPlay(SHOW);
-    
-    
-    printf("请输入您要选的位置\n如第一行第二列无雷:1 1 0\n如第一行第二列排雷:1 1 $\n:>");
-    int x,y;
-    char k;
-    int flag = 0;
-    while (scanf("%d %d %c",&x,&y,&k) != EOF ) {
-        
-        switch (k) {
-            case '0':
-                if (x >= 1 && x <= ROW && y >= 1 && y <= COL) {
-                    if (flag == 0) {
-                        RemoveMINE1(MINE,SHOW,x,y);
-                        DisPlay(SHOW);
-                        printf("请输入您要选的位置:>");
-                        flag++;
-                        
-                        
-                    }
-                    
-                    else{
-                        int ret = RemoveMINE2(MINE,SHOW,x,y);
-                        if (ret == 1) {
-                            return;
-                        }
-                        DisPlay(SHOW);
-                        printf("请输入您要选的位置:>");
-                    }
-                }
-                
-                else{
-                    printf("输入错误，请重新输入:>");
-                }
-                break;
-            
-            case '$':{
-                
-                int ret = RemoveMINE3(MINE,SHOW,x,y);
-                if (ret == 1) {
-                    return;
-                }
-            
-                DisPlay(SHOW);
-                printf("排雷成功！\n");
-                printf("请输入您要选的位置:>");
-            }
-                break;
-                
-            default:
-                printf("输入错误，请重新输入:>");
-                break;
+    for (a=0; a<i; a++)
+        {
+            for (b=0; b<j; b++)
+                printf("%3d",k[a][b]);
+            printf("\n");
         }
-        
-        
-        
-        
-        
     
+    int m;
+    scanf("%d",&m);
+    
+ /*-------------------------------------------------------------------*/
+ 
+    a=0;
+    b=j-1;
+    while (a<=i&&b>=0)
+    {
+        if (k[a][b]>m)
+            b--;
+        
+        else if (k[a][b]<m)
+            a++;
+        
+        else
+        {
+            printf("存在\n");
+            return 1;
+        }
     }
-    
-}
-
-
-int main(int argc, const char * argv[]) {
-
-    
-    int CHOICE;
-    menu();
-    
-    do {
-        printf("请输入您的选择:>");
-        scanf("%d",&CHOICE);
-        
-        switch (CHOICE) {
-            case 1:
-                game();
-                menu();
-                break;
-            case 0:
-                printf("游戏结束！\n");
-                return 0;
-            default:
-                printf("选择错误！\n");
-                break;
-        }
-    } while (CHOICE);
-    
-    
+    printf("不存在\n");
     return 0;
 }
+
